@@ -17,7 +17,7 @@ import java.nio.channels.FileChannel;
  * Buffer本质上说是一个容器对象。是一个字节数组
  * 任何发送到Channel的数据都必须先放进Buffer，
  * 任何从Channel中读出的数据都先读进Buffer。
- * 3:
+ * 3:选择器（Selector）
  */
 // NIO 读取文件
 public class ReadFile {
