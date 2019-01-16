@@ -1,0 +1,35 @@
+1：我们说缓冲区对象本质上是一个数组，但它其实是一个特殊的数组，缓冲区对象内置了一些机制，能够跟踪和记录缓冲区的状态变化情况，
+    使用get()方法从缓冲区获取数据，使用put()方法把数据写入缓冲区，都会引起缓冲区状态的变化
+2：有三个属性：
+    position：指定了下一个将要被写入或者读取的元素索引，它的值由get()/put()方法自动更新，在新创建一个Buffer对象时，position被初始化为0。
+
+    limit：指定还有多少数据需要取出(在从缓冲区写入通道时)，或者还有多少空间可以放入数据(在从通道读入缓冲区时)。
+
+    capacity：指定了可以存储在缓冲区中的最大数据容量，实际上，它指定了底层数组的大小，或者至少是指定了准许我们使用的底层数组的容量。
+3：调用flip()方法，该方法将会完成两件事情：
+    1. 把limit设置为当前的position值
+    2. 把position设置为0
+    理解为从channel中写入多少数据到buffer中，从buffer中读取到多少数据到channel中
+
+    由于position被设置为0，所以可以保证在下一步输出时读取到的是缓冲区中的第一个字节，
+    而limit被设置为当前的position，可以保证读取的数据正好是之前写入到缓冲区中的数据
+
+    这里必须掉用该方法：不然position位置会在写入buffer中时的位置，就不能从buffer中读取到数据了
+
+    clear()方法能够把所有的状态变化设置为初始化时的值，Buffer被清空了，其实Buffer中的数据并未被清除
+
+    缓冲区的分片与数据共享，只读缓冲区。。。。需要后序学习
+
+4：allocate()相当于创建了一个指定大小的数组，并把它包装为缓冲区对象。或者我们也可以直接将一个现有的数组，包装为缓冲区对象
+          // 分配指定大小的缓冲区
+           ByteBuffer buffer1 = ByteBuffer.allocate(10);
+           // 包装一个现有的数组
+           byte array[] = new byte[10];
+           ByteBuffer buffer2 = ByteBuffer.wrap( array );
+
+5：向Buffer中写数据：
+     1： 从Channel写到Buffer (fileChannel.read(buf))
+     2： 通过Buffer的put()方法 （buf.put(…)）
+  从Buffer中读取数据：
+     1：从Buffer读取到Channel (channel.write(buf))
+     2：使用get()方法从Buffer中读取数据 （buf.get()）

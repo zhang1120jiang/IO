@@ -1,4 +1,4 @@
-package cn.cuslink.NioDemo;
+package cn.cuslink.NioDemo.FileChannel;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.nio.channels.FileChannel;
 /**
  * @Author:zhangchundong
  * @Date:Create in 19:11 2019/1/15
- * NIO的三个要素：
+ * NIO的三个要素：FileChannel,是阻塞的，不能设置为非阻塞，大文件时效率高，小文件时传统io高
  * 1：Channel
  * Channel所有去任何地方（或者来自任何地方）的数据都必须通过Channel对象。
  * 可以从Channel中读取数据，也可以从Channel中写入数据。

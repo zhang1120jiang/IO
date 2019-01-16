@@ -1,0 +1,65 @@
+有I/O操作的时候，他会通知Selector，Selector就是记住这个信道有I/O操作，
+并且知道是何种I/O操作，是读呢？是写呢？还是接受新的连接；
+所以如果使用Selector，它返回的结果只有两种结果，一种是0，
+即在你调用的时刻没有任何客户端需要I/O操作，另一种结果是一组需要I/O操作的客户端
+
+要使用选择器（Selector）--》监听其注册的通道，
+    1：需要创建一个Selector实例（使用静态工厂方法open()）
+    2：并将其注册（register）到想要监控的信道上（注意，这要通过channel的方法实现，而不是使用selector的方法）。
+    3：调用选择器的select()方法。该方法会阻塞等待，直到有一个或更多的信道准备好了I/O操作或等待超时。
+        select()方法将返回可进行I/O操作的信道数量。
+        现在，在一个单独的线程中，通过调用select()方法就能检查多个信道是否准备好进行I/O操作。
+        如果经过一段时间后仍然没有信道准备好，select()方法就会返回0，并允许程序继续执行其他任务。
+
+通道触发了一个事件意思是该事件已经就绪:register()方法的第二个参数，interest集合
+    1. Connect --> 某个channel成功连接到另一个服务器称为“连接就绪”。
+    2. Accept  --> 一个server socket channel准备好接收新进入的连接称为“接收就绪”。
+    3. Read    --> 一个有数据可读的通道可以说是“读就绪”
+    4. Write   --> 一个等待写数据的通道可以说是“写就绪”
+
+SelectionKey的四个常量来表示上面对应的事件：
+    1. SelectionKey.OP_CONNECT
+    2. SelectionKey.OP_ACCEPT
+    3. SelectionKey.OP_READ
+    4. SelectionKey.OP_WRITE
+SelectionKey：
+    将selector注册到通道上时，得到SelectionKey，包含了下面几个属性
+    interest集合
+    ready集合
+    Channel ---》Channel  channel  = selectionKey.channel();这里需要转型为你注册时的通道
+    Selector---》Selector selector = selectionKey.selector();
+    附加的对象（可选）
+
+    ready集合：
+        ready 集合是通道已经准备就绪的操作的集合。在一次选择(Selection)之后，
+        你会首先访问这个ready set。Selection将在下一小节进行解释。可以这样访问ready集合：
+             int readySet = selectionKey.readyOps();
+        可以用像检测interest集合那样的方法，来检测channel中什么事件或操作已经就绪。
+        但是，也可以使用以下四个方法，它们都会返回一个布尔类型：
+            selectionKey.isAcceptable();
+            selectionKey.isConnectable();
+            selectionKey.isReadable();
+            selectionKey.isWritable();
+    附加对象：
+        可以将一个对象或者更多信息附着到SelectionKey上，这样就能方便的识别某个给定的通道。
+        例如，可以附加 与通道一起使用的Buffer，或是包含聚集数据的某个对象。使用方法如下：
+             selectionKey.attach(theObject);
+             Object attachedObj = selectionKey.attachment();
+        还可以在用register()方法向Selector注册Channel的时候附加对象。如：
+             SelectionKey key = channel.register(selector, SelectionKey.OP_READ, theObject);
+Selector：
+    select()方法。这些方法返回你所感兴趣的事件（如连接、接受、读或写）已经准备就绪的那些通道。
+    换句话说，如果你对“读就绪”的通道感兴趣，select()方法会返回读事件已经就绪的那些通道。
+
+    select() ----》阻塞到至少有一个通道在你注册的事件上就绪了。
+    select(long timeout)和select()一样，最长会阻塞timeout毫秒(参数)。
+    selectNow()不会阻塞，不管什么通道就绪都立刻返回
+    （译者注：此方法执行非阻塞的选择操作。如果自从前一次选择操作后，没有通道变成可选择的，
+        则此方法直接返回零。
+
+    select()方法返回该方法调用之间有多少通道已经就绪；通过调用selector的selectedKeys()方法，
+    访问“已选择键集（selected key set）”中的就绪通道。
+
+    keyIterator.remove()调用。
+    Selector不会自己从已选择键集中移除SelectionKey实例。必须在处理完通道时自己移除。
+    下次该通道变成就绪时，Selector会再次将其放入已选择键集中。

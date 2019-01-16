@@ -1,4 +1,4 @@
-package cn.cuslink.NioDemo;
+package cn.cuslink.NioDemo.FileChannel;
 
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;

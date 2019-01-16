@@ -1,0 +1,12 @@
+1：Channel的主要实现有：
+    1.FileChannel         文件channel
+    2.DatagramChannel     UDP Channel
+    3.SocketChannel       TCP/IP Channel
+    4.ServerSocketChannel
+
+2：SocketChannel
+    channel.configureBlocking(false)---实现非阻塞式的信道
+    在非阻塞式信道上调用一个方法总是会立即返回。
+    这种调用的返回值指示了所请求的操作完成的程度。
+    例如，在一个非阻塞式ServerSocketChannel上调用accept()方法，如果有连接请求来了，
+        则返回客户端SocketChannel，否则返回null。
