@@ -1,5 +1,8 @@
 package cn.cuslink.NioDemo.ServerSocketChannel;
 
+import cn.cuslink.NioDemo.ServerSocketChannel.handle.HandAccept;
+import cn.cuslink.NioDemo.ServerSocketChannel.handle.HandRead;
+
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -39,10 +42,11 @@ public class NioServerSokcetChannel {
             // 8：根据不同key监控的不同通道
             if (key.isAcceptable()) {// 对应OP_ACCEPT
                System.out.println("处理OP_ACCEPT");
+               HandAccept.handleAceept(key);
 
             } else if (key.isReadable()) {// 对应OP_READ
                System.out.println("处理OP_READ");
-
+               HandRead.handRead(key);
             } else if (key.isWritable()) {// 对应OP_WRITE
                System.out.println("处理OP_WRITE");
 
@@ -52,6 +56,7 @@ public class NioServerSokcetChannel {
 //            下次该通道变成就绪时，Selector会再次将其放入已选择键集中
             selectionKeys.remove(key);
          }
+         Thread.sleep(2000);
       }
    }
 }
