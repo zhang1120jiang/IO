@@ -1,0 +1,8 @@
+Netty是由JBOSS提供的一个java开源框架。
+    Netty提供异步的、事件驱动的网络应用程序框架和工具，
+    可以定制不同的协议（FTP,HTTP,SMTP..）,
+    用以快速开发高性能、高可靠性的网络服务器和客户端程序。
+    封装了java socket NIO。
+
+    ChannelHandler接口--》提供处理事件的方法
+    ChannelHandlerAdapter--》其适配器类，实现了所有的方法
