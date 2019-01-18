@@ -18,6 +18,7 @@ import org.junit.Test;
 
 public class UseProtocol {
 
+
    // NioEventLoopGroup 是用来处理I/O操作的多线程事件循环器
    // 不同的EventLoopGroup的实现用来处理不同传输协议
    public void use() throws Exception {
@@ -33,7 +34,7 @@ public class UseProtocol {
       // 处理一个最近的已经接收的Channel
       bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
          @Override
-         protected void initChannel(SocketChannel socketChannel) throws Exception {
+         protected void initChannel(SocketChannel socketChannel) {
             // 将之前定义的规则放进来
             socketChannel.pipeline().addLast(new NettyDemo());
          }
